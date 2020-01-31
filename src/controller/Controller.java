@@ -23,8 +23,8 @@ public class Controller {
 //		modelo = new Modelo();
 //	}
 //		
-//	public void run() 
-//	{
+	public void run() 
+	{
 //		Scanner lector = new Scanner(System.in);
 //		boolean fin = false;
 //		String dato = "";
@@ -99,5 +99,5 @@ public class Controller {
 //			}
 //		}
 //		
-//	}	
+	}	
 }
