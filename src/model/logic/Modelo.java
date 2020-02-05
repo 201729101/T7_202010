@@ -2,6 +2,7 @@ package model.logic;
 
 import java.util.Date;
 
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -21,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import model.data_structures.ListaEncadenada;
+import model.data_structures.Nodo;
 /**
  * Definicion del modelo del mundo
  *
@@ -51,17 +53,7 @@ public class Modelo
 		
 		try 
 		{
-//			reader = new JsonReader(new FileReader(path));
-//			String[] lista = gson.fromJson(reader, String[].class);
-//			System.out.println(Arrays.toString(lista));
-			
 			readJsonStream(new FileInputStream(path));
-			
-//			reader = new JsonReader(new FileReader(path));
-//			JsonElement elem = JsonParser.parseReader(reader);
-//			JsonElement e = elem.getAsJsonObject().get("body").getAsJsonObject().get("data");
-//			Message[] lista = gson.fromJson(e, Message[].class);
-//			System.out.println(Arrays.toString(lista));
 		} 
 		catch (FileNotFoundException e) 
 		{
@@ -298,14 +290,25 @@ public class Modelo
 	}
 	
 	
-	public Infraccion buscar(Infraccion pInf)
+	public Infraccion buscar(int pId)
 	{
-		return (Infraccion) lista.buscar(pInf);
+		Infraccion buscada = null;
+		for(Nodo e = lista.darPrimero() ; e!=null ; e = e.darSiguiente())
+		{
+			Infraccion actual = (Infraccion) e.darElemento();
+			
+			if(actual.getId()==pId)
+			{
+				return actual;
+			}
+		}
+		return null;
 	}
 	
-	public void eliminar(Infraccion pId)
+	public Infraccion eliminar(int pId)
 	{
-		lista.eliminar(pId);
+		Infraccion inf = buscar(pId);
+		return (Infraccion) lista.eliminar(inf);
 	}
 	
 	public int darTamano()

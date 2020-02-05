@@ -70,6 +70,14 @@ public class Infraccion implements Comparable
 		return medio;
 	}
 	
+	public String getClase() {
+		return clase;
+	}
+	
+	public String getLocalidad() {
+		return localidad;
+	}
+	
 	public void setLatitud(double latitud) {
 		this.latitud = latitud;
 	}

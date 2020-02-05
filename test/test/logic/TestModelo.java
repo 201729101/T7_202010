@@ -11,7 +11,6 @@ import org.junit.Test;
 public class TestModelo {
 	
 	private Modelo modelo;
-	private static int CAPACIDAD=100;
 	
 	@Before
 	public void setUp1() 
@@ -45,30 +44,31 @@ public class TestModelo {
 
 	@Test
 	public void testAgregarFinal() {
-		// TODO Completar la prueba
 		setUp3();
 		assertEquals(1,modelo.darTamano());
-		assertNotNull(modelo.buscar(new Infraccion(0, null, null, null, null, null, null, null, 0, 0)));
+		assertNotNull(modelo.buscar(0));
 	}
 	
 	@Test
 	public void testAgregarInicio(){
-		modelo.agregarInicio(new Infraccion(0, null, null, null, null, null, null, null, 0, 0));
+		Infraccion inf = new Infraccion(0, null, null, null, null, null, null, null, 0, 0);
+		modelo.agregarInicio(inf);
 		assertEquals(1, modelo.darTamano());
-		
+		assertEquals(0,modelo.darLista().darPrimero().darElemento().compareTo(inf));
 	}
 
 	@Test
 	public void testBuscar() {
-		// TODO Completar la prueba
 		setUp3();
-		assertNotNull(modelo.buscar(new Infraccion(0, null, null, null, null, null, null, null, 0, 0)));
+		assertNotNull(modelo.buscar(0));
+		assertEquals(0.0,modelo.buscar(0).getLatitud());
 	}
 
 	@Test
 	public void testEliminar() {
-		// TODO Completar la prueba
-		
+		setUp3();
+		modelo.eliminar(0);
+		assertNull(modelo.buscar(0));
 	}
 
 }

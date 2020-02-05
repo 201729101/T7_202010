@@ -27,8 +27,31 @@ public class ListaEncadenada<E extends Comparable<E>>
 		return primero;
 	}
 	
+	public Nodo<E> darUltimo()
+	{
+		return ultimo;
+	}
 	
-	public E get(int i)
+	public E buscar(E elemento)
+	{	
+		if(primero==null)
+		{
+			return null;
+		}
+		else
+		{
+			for(Nodo<E> n = primero ; n!=null ; n = n.darSiguiente())
+			{
+				if(n.darElemento().compareTo(elemento)==0)
+				{
+					return n.darElemento();
+				}
+			}
+			return null;
+		}
+	}
+	
+	public E buscar(int i)
 	{
 		E elemento = null;
 		Nodo<E> item = primero;
@@ -37,7 +60,7 @@ public class ListaEncadenada<E extends Comparable<E>>
 		{
 			if(cont==i)
 			{
-				elemento = (E) item;
+				elemento = item.darElemento();
 				break;
 			}
 			item = (Nodo<E>) item.darSiguiente();
@@ -80,38 +103,18 @@ public class ListaEncadenada<E extends Comparable<E>>
 		numElem++;
 	}
 	
-	public E buscar(E elemento)
-	{	
-		if(primero==null)
-		{
-			return null;
-		}
-		else
-		{
-			for(Nodo<E> n = primero ; n!=null ; n = n.darSiguiente())
-			{
-				if(n.darElemento().compareTo(elemento)==0)
-				{
-					return n.darElemento();
-				}
-			}
-			return null;
-		}
-	}
-	
-	public void eliminar(E elemento)
+	public E eliminar(E elemento)
 	{
-		E buscado = buscar(elemento);
-		if(primero!=null && primero.darElemento().compareTo(buscado)!=0)
+		if(primero!=null && primero.darElemento().compareTo(elemento)!=0)
 		{
 			Nodo<E> anterior = primero;
 			for(Nodo<E> n = primero.darSiguiente() ; n!=null ; n = n.darSiguiente())
 			{
-				if(n.darElemento().compareTo(buscado)==0)
+				if(n.darElemento().compareTo(elemento)==0)
 				{
 					anterior.cambiarSiguiente(n.darSiguiente());
 					n.cambiarSiguiente(null);
-					break;
+					return n.darElemento();
 				}
 				anterior = n;
 			}
@@ -121,6 +124,41 @@ public class ListaEncadenada<E extends Comparable<E>>
 			Nodo<E> nuevo = primero;
 			primero = primero.darSiguiente();
 			nuevo.cambiarSiguiente(null);
+			return primero.darElemento();
 		}
+		return null;
+	}
+	
+	public E eliminar(int i)
+	{
+		E elemento = null;
+		Nodo<E> anterior = primero;
+		Nodo<E> item = primero.darSiguiente();
+		int cont = 1;
+		if(i!=0)
+		{
+			while(item!=null)
+			{
+				if(cont==i)
+				{
+					anterior.cambiarSiguiente(item.darSiguiente());
+					elemento = item.darElemento();
+					item.cambiarSiguiente(null);
+					break;
+				}
+				anterior = item;
+				item = item.darSiguiente();
+				cont ++;
+			}
+		}
+		else
+		{
+			Nodo<E> temp = primero;
+			primero = primero.darSiguiente();
+			temp.cambiarSiguiente(null);
+			elemento = temp.darElemento();
+		}
+		
+		return elemento;
 	}
 }
