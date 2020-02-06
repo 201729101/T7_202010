@@ -24,6 +24,9 @@ public class Controller {
 		modelo = new Modelo();
 	}
 		
+	/**
+	 * Corre el sistema mediante la consola 
+	 */
 	public void run() 
 	{
 		Scanner lector = new Scanner(System.in);

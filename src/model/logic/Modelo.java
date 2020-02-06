@@ -43,8 +43,8 @@ public class Modelo
 	}
 	
 	/**
-	 * Lee el archivo JSON
-	 * @param path
+	 * Inicia la lectura del archivo JSON y rellena la lista
+	 * @param path, ruta del archivo a leer
 	 */
 	public void leerDatos(String path)
 	{
@@ -65,6 +65,12 @@ public class Modelo
 		}
 	}
 	
+	/**
+	 * Lee el archivo JSON
+	 * @param in InputStream mediante el cual se hace la lectura, in!=null
+	 * @return lista rellenada con los datos
+	 * @throws IOException si no es posible leer el archivo 
+	 */
 	public ListaEncadenada readJsonStream(InputStream in) throws IOException 
 	{
 		JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
@@ -78,6 +84,12 @@ public class Modelo
 		}
 	}
 	
+	/**
+	 * Lee el mensaje general en el archivo
+	 * @param reader JsonReader que debe leer
+	 * @return lista con los comparendos
+	 * @throws IOException si no es posible leer el archivo
+	 */
 	public ListaEncadenada readGeneral(JsonReader reader) throws IOException 
 	{
 		String type = null;
@@ -148,7 +160,12 @@ public class Modelo
 		return lista;
 	}
 	
-
+	/**
+	 * Lee el arreglo de mensajes en la sección "features" del archivo de comparendos
+	 * @param reader JsonReeader a leer
+	 * @return lista con los comparendos en el archivo
+	 * @throws IOException si no es posible leer la lista
+	 */
 	public ListaEncadenada readMessagesArray(JsonReader reader) throws IOException 
 	{
 		ListaEncadenada messages = new ListaEncadenada();
@@ -162,6 +179,12 @@ public class Modelo
 		return messages;
 	}
 	
+	/**
+	 * Lee las infracciones de la sección features en el archivo json de los comparendos
+	 * @param reader JsonReader a leer
+	 * @return Infraccion leida del archivo
+	 * @throws IOException si no se puede leer el archivo
+	 */
 	public Infraccion readFeatures(JsonReader reader) throws IOException 
 	{
 		String type = null;
@@ -202,6 +225,12 @@ public class Modelo
 		}
 	}
 	
+	/**
+	 * Lee los datos de la sección properties en el archivo json de los comparendos
+	 * @param reader JsonReader a leer
+	 * @return arreglo de strings con los datos leidos
+	 * @throws IOException si no se pudo leer el archivo
+	 */
 	public String[] readProperties(JsonReader reader) throws IOException 
 	{
 		String[] data = new String[8];
@@ -250,6 +279,12 @@ public class Modelo
 		return data;
 	}
 	
+	/**
+	 * Lee los datos de la sección geometry del archivo json con los comparendos
+	 * @param reader JsonReader a leer
+	 * @return ArrayList con los doubles de la longitud y latitud
+	 * @throws IOException si no se pudo leer el archivo
+	 */
 	public ArrayList<Double> readGeometry(JsonReader reader) throws IOException 
 	{
 		ArrayList<Double> data = new ArrayList();
@@ -276,6 +311,12 @@ public class Modelo
 		return data;
 	}
 	
+	/**
+	 * Lee el arreglo de doubles en el archivo json con los comparendos en la sección geometry
+	 * @param reader JsonReader a leer
+	 * @return Lista con los doubles leidos
+	 * @throws IOException si no se pudo leer los datos
+	 */
 	public List<Double> readDoublesArray(JsonReader reader) throws IOException 
 	{
 		List<Double> doubles = new ArrayList<Double>();
@@ -289,7 +330,11 @@ public class Modelo
 		return doubles;
 	}
 	
-	
+	/**
+	 * Busca una infracción en la lista con un ID recibido por parámetro
+	 * @param pId ID de la infracción a buscar
+	 * @return Infracción buscada, null si no es encontrada
+	 */
 	public Infraccion buscar(int pId)
 	{
 		Infraccion buscada = null;
@@ -305,27 +350,48 @@ public class Modelo
 		return null;
 	}
 	
+	/**
+	 * Elimina y retorna una infracción con un id recibido por parámetro
+	 * @param pId ID de la infraccion a eliminar
+	 * @return infraccion eliminada, null si no está la infraccion
+	 */
 	public Infraccion eliminar(int pId)
 	{
 		Infraccion inf = buscar(pId);
 		return (Infraccion) lista.eliminar(inf);
 	}
 	
+	/**
+	 * Retona el tamaño de la lista
+	 * @return tamaño de la lista
+	 */
 	public int darTamano()
 	{
 		return lista.darTamano();
 	}
 	
+	/**
+	 * Agrega una infracción recibida por parámetro al final de la lista
+	 * @param pInf infracción a agregar
+	 */
 	public void agregarFinal(Infraccion pInf)
 	{
 		lista.agregarFinal(pInf);
 	}
 	
+	/**
+	 * Agrega una infracción rebida por parámetro al inicio de la lista
+	 * @param pInf nfracción a agregar
+	 */
 	public void agregarInicio(Infraccion pInf)
 	{
 		lista.agregarInicio(pInf);
 	}
 	
+	/**
+	 * retorna la lista encadenada
+	 * @return lista encadenada
+	 */
 	public ListaEncadenada darLista() {
 		return lista;
 	}

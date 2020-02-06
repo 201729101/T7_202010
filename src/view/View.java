@@ -15,6 +15,9 @@ public class View
 	    	
 	    }
 	    
+	    /**
+	     *Imprime el menú 
+	     */
 		public void printMenu()
 		{
 			System.out.println("1. Cargar lista de comparendos");
@@ -26,11 +29,19 @@ public class View
 			System.out.println("Dar el numero de opcion a resolver, luego oprimir tecla Return: (e.g., 1):");
 		}
 
+		/**
+		 * Imprime un mensaje recibido por parámetro
+		 * @param mensaje mensaje a imprimir
+		 */
 		public void printMessage(String mensaje) {
 
 			System.out.println(mensaje);
 		}		
 		
+		/**
+		 * Imprime todo un modelo recibido por parámetro
+		 * @param modelo Modelo a imprimir
+		 */
 		public void printModelo(Modelo modelo)
 		{
 			ListaEncadenada lista = modelo.darLista();

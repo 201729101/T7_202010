@@ -2,28 +2,74 @@ package model.logic;
 
 import java.util.Date;
 
+/**
+ * Clase de una infracción de transito
+ */
 public class Infraccion implements Comparable
 {
+	/**
+	 * ID del comparendo
+	 */
 	private int id;
 	
+	/**
+	 * Fecha del comparendo en String
+	 */
 	private String fecha;
 	
+	/**
+	 * Medio de detección del comparendo
+	 */
 	private String medio;
 	
+	/**
+	 * Clase de vehículo comparentado
+	 */
 	private String clase;
 	
+	/**
+	 * Tipo de servicio del vehículo comparentado
+	 */
 	private String tipo;
 	
+	/**
+	 * Código de la infracción colocada
+	 */
 	private String infr;
 	
+	/**
+	 * Descripción del comparendo
+	 */
 	private String desc;
 	
+	/**
+	 * Localidad en que se colocó el comparendo
+	 */
 	private String localidad;
 	
+	/**
+	 * Latitud en que se colocó el comparendo
+	 */
 	private double latitud;
 	
+	/**
+	 * Longitud en que se colocó el comparendo
+	 */
 	private double longitud;
 	
+	/**
+	 * Contructor
+	 * @param pId ID del comparendo
+	 * @param pFecha Fecha del comparendo
+	 * @param pMedio Medio de detección del comparendo
+	 * @param pClase Clase de vehículo comparentado
+	 * @param pTipo Tipo de servicio del vahículo comparentado
+	 * @param pInfr Código de la infracción colocada
+	 * @param pDesc Descripcion del comparendo
+	 * @param pLoc Localidad donde se puso el comparendo
+	 * @param pLat Latitud donde se puso el comparendo
+	 * @param pLong Longitud donde se puso el comparendo
+	 */
 	public Infraccion(int pId, String pFecha, String pMedio, String pClase, String pTipo, String pInfr, String pDesc, String pLoc, double pLat, double pLong)
 	{
 		id = pId;
@@ -38,79 +84,92 @@ public class Infraccion implements Comparable
 		longitud = pLong;
 	}
 	
+	/**
+	 * Reotna el tipo de servicio
+	 * @return tipo de servicio
+	 */
 	public String getTipo() {
 		return tipo;
 	}
 	
+	/**
+	 * Retorna la latidud 
+	 * @return latitud
+	 */
 	public double getLatitud() {
 		return latitud;
 	}
 	
+	/**
+	 * Retorna la longitud
+	 * @return longitud
+	 */
 	public double getLongitud() {
 		return longitud;
 	}
 	
+	/**
+	 * Retorna la descripción
+	 * @return descripción
+	 */
 	public String getDesc() {
 		return desc;
 	}
 	
+	/**
+	 * Retorna la fecha
+	 * @return fecha
+	 */
 	public String getFecha() {
 		return fecha;
 	}
 	
+	/** 
+	 * Retorna el id
+	 * @return id
+	 */
 	public int getId() {
 		return id;
 	}
 	
+	/**
+	 * Retorna la infracción
+	 * @return infracción
+	 */
 	public String getInfr() {
 		return infr;
 	}
 	
+	/**
+	 * Retorna el medio
+	 * @return medio
+	 */
 	public String getMedio() {
 		return medio;
 	}
 	
+	/**
+	 * Retorna la clase
+	 * @return clase
+	 */
 	public String getClase() {
 		return clase;
 	}
 	
+	/**
+	 * Retorna la localidad
+	 * @return
+	 */
 	public String getLocalidad() {
 		return localidad;
 	}
 	
-	public void setLatitud(double latitud) {
-		this.latitud = latitud;
-	}
-	
-	public void setLongitud(double longitud) {
-		this.longitud = longitud;
-	}
-	
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
-	
-	public void setFecha(String fecha) {
-		this.fecha = fecha;
-	}
-	
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	public void setInfr(String infr) {
-		this.infr = infr;
-	}
-	
-	public void setMedio(String medio) {
-		this.medio = medio;
-	}
-	
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
 	
 	@Override
+	/**
+	 * Compara dos infracciones por su ID, 
+	 * @return 0 si son iguales, -1 si no 
+	 */
 	public int compareTo(Object o) {
 		try
 		{
