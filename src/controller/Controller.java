@@ -39,10 +39,10 @@ public class Controller {
 			int option = lector.nextInt();
 			switch(option){
 				case 1:
-					view.printMessage("--------- \nCrear Arreglo \nDar dar ruta del archivo: ");
-				    String ruta = lector.next();
+//					view.printMessage("--------- \nCrear Arreglo \nDar dar ruta del archivo: ");
+//				    String ruta = lector.next();
 				    modelo = new Modelo(); 
-				    modelo.leerDatos(ruta);
+				    modelo.leerDatos("comparendos_dei_2018.geojson");
 				    view.printMessage("Comparendos cargados");
 				    view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
 					break;

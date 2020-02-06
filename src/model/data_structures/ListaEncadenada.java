@@ -174,7 +174,7 @@ public class ListaEncadenada<E extends Comparable<E>>
 			Nodo<E> nuevo = primero;
 			primero = primero.darSiguiente();
 			nuevo.cambiarSiguiente(null);
-			return primero.darElemento();
+			return nuevo.darElemento();
 		}
 		return null;
 	}

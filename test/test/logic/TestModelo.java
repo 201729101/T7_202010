@@ -20,7 +20,7 @@ public class TestModelo {
 	
 	public void setUp2() 
 	{
-		modelo.leerDatos("./data/comparendos_dei_2018_small.geojson");
+		modelo.leerDatos("comparendos_dei_2018_small.geojson");
 	}
 	
 	public void setUp3()
@@ -61,13 +61,13 @@ public class TestModelo {
 	public void testBuscar() {
 		setUp3();
 		assertNotNull(modelo.buscar(0));
-		assertEquals(0.0,modelo.buscar(0).getLatitud());
+		assertTrue(modelo.buscar(0).getLatitud()==0.0);
 	}
 
 	@Test
 	public void testEliminar() {
 		setUp3();
-		modelo.eliminar(0);
+		Infraccion inf = modelo.eliminar(0);
 		assertNull(modelo.buscar(0));
 	}
 

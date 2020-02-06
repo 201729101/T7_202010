@@ -53,7 +53,7 @@ public class Modelo
 		
 		try 
 		{
-			readJsonStream(new FileInputStream(path));
+			readJsonStream(new FileInputStream("./data/"+path));
 		} 
 		catch (FileNotFoundException e) 
 		{
