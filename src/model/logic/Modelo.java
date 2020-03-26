@@ -11,8 +11,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -21,8 +23,16 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
+import model.data_structures.Comparendo;
 import model.data_structures.ListaEncadenada;
 import model.data_structures.Nodo;
+import model.data_structures.TablaHashES;
+import model.data_structures.TablaHashSL;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 /**
  * Definicion del modelo del mundo
  *
@@ -32,367 +42,290 @@ public class Modelo
 	/**
 	 * Estrutura de datos que tendrá los comparendos
 	 */
-	private ListaEncadenada lista;
+	private TablaHashES tablaES;
 	
+	private TablaHashSL tablaSL;
+
 	/**
 	 * Constructor
 	 */
 	public Modelo ()
 	{
-		lista = new ListaEncadenada();
+		tablaES = new TablaHashES();
+		tablaSL = new TablaHashSL();
 	}
-	
+
 	/**
 	 * Inicia la lectura del archivo JSON y rellena la lista
 	 * @param path, ruta del archivo a leer
 	 */
-	public void leerDatos(String path)
+	public Comparendo[] cargarDatos(String PATH) 
 	{
-		Gson gson = new Gson();
 		JsonReader reader;
-		
-		try 
-		{
-			readJsonStream(new FileInputStream("./data/"+path));
-		} 
-		catch (FileNotFoundException e) 
-		{
-			e.printStackTrace();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Lee el archivo JSON
-	 * @param in InputStream mediante el cual se hace la lectura, in!=null
-	 * @return lista rellenada con los datos
-	 * @throws IOException si no es posible leer el archivo 
-	 */
-	public ListaEncadenada readJsonStream(InputStream in) throws IOException 
-	{
-		JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-		try 
-		{
-			return readGeneral(reader);
-		} 
-		finally 
-		{
-			reader.close();
-		}
-	}
-	
-	/**
-	 * Lee el mensaje general en el archivo
-	 * @param reader JsonReader que debe leer
-	 * @return lista con los comparendos
-	 * @throws IOException si no es posible leer el archivo
-	 */
-	public ListaEncadenada readGeneral(JsonReader reader) throws IOException 
-	{
-		String type = null;
-		String n = null;
-		String crs = null;
-		
+		try {
+			reader = new JsonReader(new FileReader(PATH));
+			JsonElement elem = JsonParser.parseReader(reader);
+			JsonArray e2 = elem.getAsJsonObject().get("features").getAsJsonArray();
 
-		reader.beginObject();
-		while (reader.hasNext()) 
-		{
-			String name = reader.nextName();
-			if (name.equals("type")) 
-			{
-				type = reader.nextString();
-			} 
-			else if (name.equals("name")) 
-			{
-				n = reader.nextString();
-			} 
-			else if (name.equals("crs"))
-			{
-				String t = null;
-				
-				reader.beginObject();
-				while (reader.hasNext())
-				{
-					String read = reader.nextName();
-					if(read.equals("type"))
-					{
-						t = reader.nextString();
-					}
-					else if(read.equals("properties"))
-					{
-						String p = null;
-						
-						reader.beginObject();
-						while(reader.hasNext())
-						{
-							String read2 = reader.nextName();
-							if(read2.equals("name"))
-							{
-								p = reader.nextString();
-							}
-							else
-							{
-								reader.skipValue();
-							}
-						}
-						reader.endObject();
-					}
-					else
-					{
-						reader.skipValue();
-					}
-				}
-				reader.endObject();
-			}
-			else if( name.equals("features"))
-			{
-				lista = readMessagesArray(reader);
-			}
-			else
-			{
-				reader.skipValue();
-			}
-		}
-		reader.endObject();
-		return lista;
-	}
-	
-	/**
-	 * Lee el arreglo de mensajes en la sección "features" del archivo de comparendos
-	 * @param reader JsonReeader a leer
-	 * @return lista con los comparendos en el archivo
-	 * @throws IOException si no es posible leer la lista
-	 */
-	public ListaEncadenada readMessagesArray(JsonReader reader) throws IOException 
-	{
-		ListaEncadenada messages = new ListaEncadenada();
+			SimpleDateFormat parser = new SimpleDateFormat("yyyy/MM/dd");
+			Comparendo primero = null;
+			Comparendo ultimo = null;
+			Comparendo[] retorno = new Comparendo[2];
 
-		reader.beginArray();
-		while (reader.hasNext()) 
-		{
-			messages.agregarFinal(readFeatures(reader));
-		}
-		reader.endArray();
-		return messages;
-	}
-	
-	/**
-	 * Lee las infracciones de la sección features en el archivo json de los comparendos
-	 * @param reader JsonReader a leer
-	 * @return Infraccion leida del archivo
-	 * @throws IOException si no se puede leer el archivo
-	 */
-	public Infraccion readFeatures(JsonReader reader) throws IOException 
-	{
-		String type = null;
-		String[] datos = null;
-		ArrayList<Double> geo = null;
+			for(JsonElement e: e2) {
+				int OBJECTID = e.getAsJsonObject().get("properties").getAsJsonObject().get("OBJECTID").getAsInt();
 
-		reader.beginObject();
-		while (reader.hasNext()) 
-		{
-			String name = reader.nextName();
-			if (name.equals("type")) 
-			{
-				type = reader.nextString();
-			} 
-			else if (name.equals("properties")) 
-			{
-				datos = readProperties(reader);
-			} 
-			else if (name.equals("geometry"))
-			{
-				geo = readGeometry(reader);
+				String s = e.getAsJsonObject().get("properties").getAsJsonObject().get("FECHA_HORA").getAsString();	
+				Date FECHA_HORA = parser.parse(s); 
+
+				String MEDIO_DETE = e.getAsJsonObject().get("properties").getAsJsonObject().get("MEDIO_DETE").getAsString();
+				String CLASE_VEHI = e.getAsJsonObject().get("properties").getAsJsonObject().get("CLASE_VEHI").getAsString();
+				String TIPO_SERVI = e.getAsJsonObject().get("properties").getAsJsonObject().get("TIPO_SERVI").getAsString();
+				String INFRACCION = e.getAsJsonObject().get("properties").getAsJsonObject().get("INFRACCION").getAsString();
+				String DES_INFRAC = e.getAsJsonObject().get("properties").getAsJsonObject().get("DES_INFRAC").getAsString();	
+				String LOCALIDAD = e.getAsJsonObject().get("properties").getAsJsonObject().get("LOCALIDAD").getAsString();
+
+				double longitud = e.getAsJsonObject().get("geometry").getAsJsonObject().get("coordinates").getAsJsonArray()
+						.get(0).getAsDouble();
+
+				double latitud = e.getAsJsonObject().get("geometry").getAsJsonObject().get("coordinates").getAsJsonArray()
+						.get(1).getAsDouble();
+
+				Comparendo c = new Comparendo(OBJECTID, FECHA_HORA, MEDIO_DETE, CLASE_VEHI, TIPO_SERVI, INFRACCION, DES_INFRAC, LOCALIDAD, longitud, latitud);
+				String key = s+CLASE_VEHI+INFRACCION;
+				agregarES(key, c);
+				agregarSL(key, c);
+				if(primero == null)
+					primero =c;
+				ultimo = c;
 			}
-			else
-			{
-				reader.skipValue();
-			}
-		}
-		reader.endObject();
-		try
-		{
-			Infraccion retorno = new Infraccion(Integer.parseInt(datos[0]),datos[1],datos[2],datos[3],datos[4],datos[5],datos[6],datos[7],geo.get(0),geo.get(1));
+			
+			retorno[0] = primero;
+			retorno[1] = ultimo;
 			return retorno;
-		}
-		catch(Exception e)
+		} 
+		catch (Exception e) 
 		{
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 			return null;
-		}
+		}	
 	}
 	
-	/**
-	 * Lee los datos de la sección properties en el archivo json de los comparendos
-	 * @param reader JsonReader a leer
-	 * @return arreglo de strings con los datos leidos
-	 * @throws IOException si no se pudo leer el archivo
-	 */
-	public String[] readProperties(JsonReader reader) throws IOException 
+	public ArrayList rUno(String datos)
 	{
-		String[] data = new String[8];
-		reader.beginObject();
-		while (reader.hasNext()) 
-		{
-			String name = reader.nextName();
-			if (name.equals("OBJECTID")) 
-			{
-				data[0] = reader.nextString();
-			} 
-			else if (name.equals("FECHA_HORA")) 
-			{
-				data[1] = reader.nextString();
-			} 
-			else if (name.equals("MEDIO_DETE")) 
-			{
-				data[2] = reader.nextString();
-			} 
-			else if (name.equals("CLASE_VEHI")) 
-			{
-				data[3] = reader.nextString();
-			} 
-			else if (name.equals("TIPO_SERVI")) 
-			{
-				data[4] = reader.nextString();
-			} 
-			else if (name.equals("INFRACCION")) 
-			{
-				data[5] = reader.nextString();
-			} 
-			else if (name.equals("DES_INFRAC")) 
-			{
-				data[6] = reader.nextString();
-			}
-			else if (name.equals("LOCALIDAD"))
-			{
-				data[7] = reader.nextString();
-			}
-			else
-			{
-				reader.skipValue();
-			}
-		}
-		reader.endObject();
-		return data;
-	}
-	
-	/**
-	 * Lee los datos de la sección geometry del archivo json con los comparendos
-	 * @param reader JsonReader a leer
-	 * @return ArrayList con los doubles de la longitud y latitud
-	 * @throws IOException si no se pudo leer el archivo
-	 */
-	public ArrayList<Double> readGeometry(JsonReader reader) throws IOException 
-	{
-		ArrayList<Double> data = new ArrayList();
-		String type = null;
+		ArrayList<Comparendo> lista = new ArrayList<Comparendo>();
+		ListaEncadenada retorno = (ListaEncadenada) tablaSL.dar(datos);
 		
-		reader.beginObject();
-		while (reader.hasNext()) 
-		{
-			String name = reader.nextName();
-			if (name.equals("type"))
-			{
-				type = reader.nextString();
-			}
-			else if (name.equals("coordinates")) 
-			{
-				data = (ArrayList<Double>) readDoublesArray(reader);
-			}
+		for(Nodo n=retorno.darPrimero() ; n!=null ; n=n.darSiguiente())
+			if(lista.size()!=0 && lista.get(lista.size()-1).getId()<((Comparendo) n.darElemento()).getId())
+				lista.add((Comparendo) n.darElemento()); 
+			else if(lista.size()!=0 && lista.get(0).getId()>((Comparendo) n.darElemento()).getId())
+				lista.add(0, (Comparendo) n.darElemento());
+			else if(lista.size()==0)
+				lista.add((Comparendo) n.darElemento());
 			else
-			{
-				reader.skipValue();
-			}
-		}
-		reader.endObject();
-		return data;
-	}
-	
-	/**
-	 * Lee el arreglo de doubles en el archivo json con los comparendos en la sección geometry
-	 * @param reader JsonReader a leer
-	 * @return Lista con los doubles leidos
-	 * @throws IOException si no se pudo leer los datos
-	 */
-	public List<Double> readDoublesArray(JsonReader reader) throws IOException 
-	{
-		List<Double> doubles = new ArrayList<Double>();
-
-		reader.beginArray();
-		while (reader.hasNext()) 
-		{
-			doubles.add(reader.nextDouble());
-		}
-		reader.endArray();
-		return doubles;
-	}
-	
-	/**
-	 * Busca una infracción en la lista con un ID recibido por parámetro
-	 * @param pId ID de la infracción a buscar
-	 * @return Infracción buscada, null si no es encontrada
-	 */
-	public Infraccion buscar(int pId)
-	{
-		Infraccion buscada = null;
-		for(Nodo e = lista.darPrimero() ; e!=null ; e = e.darSiguiente())
-		{
-			Infraccion actual = (Infraccion) e.darElemento();
-			
-			if(actual.getId()==pId)
-			{
-				return actual;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Elimina y retorna una infracción con un id recibido por parámetro
-	 * @param pId ID de la infraccion a eliminar
-	 * @return infraccion eliminada, null si no está la infraccion
-	 */
-	public Infraccion eliminar(int pId)
-	{
-		Infraccion inf = buscar(pId);
-		return (Infraccion) lista.eliminar(inf);
-	}
-	
-	/**
-	 * Retona el tamaño de la lista
-	 * @return tamaño de la lista
-	 */
-	public int darTamano()
-	{
-		return lista.darTamano();
-	}
-	
-	/**
-	 * Agrega una infracción recibida por parámetro al final de la lista
-	 * @param pInf infracción a agregar
-	 */
-	public void agregarFinal(Infraccion pInf)
-	{
-		lista.agregarFinal(pInf);
-	}
-	
-	/**
-	 * Agrega una infracción rebida por parámetro al inicio de la lista
-	 * @param pInf nfracción a agregar
-	 */
-	public void agregarInicio(Infraccion pInf)
-	{
-		lista.agregarInicio(pInf);
-	}
-	
-	/**
-	 * retorna la lista encadenada
-	 * @return lista encadenada
-	 */
-	public ListaEncadenada darLista() {
+				for(int j = 1 ; j<lista.size() ; j++)
+					if(lista.get(j).getId()>((Comparendo) n.darElemento()).getId())
+						lista.add(j-1, (Comparendo) n.darElemento());
+		
+//		String[] keys = (String[]) tablaSL.getKeys();
+//		int i; 
+//		for (i = tablaSL.hash(datos) ; tablaSL.getKeys()[i] != null; i = (i + 1) % tablaSL.getM()) 
+//			if (((String) tablaSL.getKeys()[i]).equals(datos)) 
+//			{ 
+//				if(lista.size()!=0 && lista.get(lista.size()-1).getId()<((Comparendo)tablaSL.getValues()[i]).getId())
+//					lista.add((Comparendo)tablaSL.getValues()[i]); 
+//				else if(lista.size()!=0 && lista.get(0).getId()>((Comparendo)tablaSL.getValues()[i]).getId())
+//					lista.add(0, (Comparendo)tablaSL.getValues()[i]);
+//				else if(lista.size()==0)
+//					lista.add((Comparendo)tablaSL.getValues()[i]);
+//				else
+//					for(int j = 1 ; j<lista.size() ; j++)
+//						if(lista.get(j).getId()>((Comparendo)tablaSL.getValues()[i]).getId())
+//							lista.add(j-1, (Comparendo)tablaSL.getValues()[i]);
+//			} 
+//
+//		if(lista.size()!=0 && lista.get(lista.size()-1).getId()<((Comparendo)tablaSL.getValues()[i]).getId())
+//			lista.add((Comparendo)tablaSL.getValues()[i]); 
+//		else if(lista.size()!=0 && lista.get(0).getId()>((Comparendo)tablaSL.getValues()[i]).getId())
+//			lista.add(0, (Comparendo)tablaSL.getValues()[i]);
+//		else if(lista.size()==0)
+//			lista.add((Comparendo)tablaSL.getValues()[i]);
+//		else
+//			for(int j = 1 ; j<lista.size() ; j++)
+//				if(lista.get(j).getId()>((Comparendo)tablaSL.getValues()[i]).getId())
+//					lista.add(j-1, (Comparendo)tablaSL.getValues()[i]);
+////		lista.add((Comparendo)tablaSL.getValues()[i]); 
+		
 		return lista;
 	}
+	
+	public ArrayList rDos(String datos)
+	{
+		ArrayList<Comparendo> lista  = new ArrayList<Comparendo>();
+		ListaEncadenada retorno = (ListaEncadenada) tablaES.dar(datos);
+		
+		for(Nodo n=retorno.darPrimero() ; n!=null ; n=n.darSiguiente())
+			if(lista.size()!=0 && lista.get(lista.size()-1).getId()<((Comparendo) n.darElemento()).getId())
+				lista.add((Comparendo) n.darElemento()); 
+			else if(lista.size()!=0 && lista.get(0).getId()>((Comparendo) n.darElemento()).getId())
+				lista.add(0, (Comparendo) n.darElemento());
+			else if(lista.size()==0)
+				lista.add((Comparendo) n.darElemento());
+			else
+				for(int j = 1 ; j<lista.size() ; j++)
+					if(lista.get(j).getId()>((Comparendo) n.darElemento()).getId())
+						lista.add(j-1, (Comparendo) n.darElemento());
+		
+//		ListaEncadenada<String,Comparendo> value = (ListaEncadenada<String,Comparendo>)tablaES.getValues()[hash];
+//		
+//		for(Nodo n=value.darPrimero() ; n!= null ; n=n.darSiguiente())
+//			if(n.getKey().equals(datos))
+//				if(lista.size()!=0 && lista.get(lista.size()-1).getId()<((Comparendo) n.darElemento()).getId())
+//					lista.add((Comparendo) n.darElemento()); 
+//				else if(lista.size()!=0 && lista.get(0).getId()>((Comparendo) n.darElemento()).getId())
+//					lista.add(0, (Comparendo) n.darElemento());
+//				else if(lista.size()==0)
+//					lista.add((Comparendo) n.darElemento());
+//				else
+//					for(int j = 1 ; j<lista.size() ; j++)
+//						if(lista.get(j).getId()>((Comparendo) n.darElemento()).getId())
+//							lista.add(j-1, (Comparendo) n.darElemento());
+		
+		return lista;
+	}
+	
+	public Double[] rTres()
+	{
+		ArrayList tiemposSL = new ArrayList<Double>();
+		ArrayList tiemposES = new ArrayList<Double>();
+		Object[] llaves = tablaSL.getKeys();
+		
+		double minSL = 100;
+		double minES = 100;
+		double sumSL = 0.0;
+		double sumES = 0.0;
+		double maxSL = 0.0;
+		double maxES = 0.0;
+		
+		for(int i=0 ; i<=80 ; i++)
+		{
+			double p = Math.random()*10;
+			int valor = (int) p;
+			String key = "";
+			if (llaves[valor]!=null)
+				key = (String) llaves[valor];
+			else{
+				while(llaves[valor]!=null)
+				{
+					valor= (int) Math.random()*10;
+				}
+				key = (String) llaves[valor];}
+				
+			
+			long startTimeSL = System.currentTimeMillis();
+			tablaSL.dar(key);
+			long endTimeSL = System.currentTimeMillis();          
+			long durationSL = endTimeSL - startTimeSL; 
+			tiemposSL.add(durationSL);
+			sumSL += durationSL;
+			if(durationSL<minSL)
+				minSL = durationSL;
+			if(durationSL>maxSL)
+				maxSL = durationSL;
+			
+			
+			long startTimeES = System.currentTimeMillis();
+			tablaES.dar(key);
+			long endTimeES = System.currentTimeMillis();          
+			long durationES = endTimeES - startTimeES; 
+			tiemposES.add(durationES);
+			sumES += durationES;
+			if(durationES<minES)
+				minES = durationES;
+			if(durationES>maxES)
+				maxES = durationES;
+		}
+		System.out.println("LLegó 1");
+		
+		for(int i=0 ; i<=20 ; i++)
+		{
+			String key = "2019"+Math.random() * 10;
+			long startTimeSL = System.currentTimeMillis();
+			tablaSL.dar(key);
+			long endTimeSL = System.currentTimeMillis();          
+			long durationSL = endTimeSL - startTimeSL; 
+			tiemposSL.add(durationSL);
+			sumSL += durationSL;
+			if(durationSL<minSL)
+				minSL = durationSL;
+			if(durationSL>maxSL)
+				maxSL = durationSL;
+			
+			long startTimeES = System.currentTimeMillis();
+			tablaES.dar(key);
+			long endTimeES = System.currentTimeMillis();          
+			long durationES = endTimeES - startTimeES; 
+			tiemposES.add(durationES);
+			sumES += durationES;
+			if(durationES<minES)
+				minES = durationES;
+			if(durationES>maxES)
+				maxES = durationES;
+		}
+		
+		System.out.println("Llegó 2");
+		
+		Double[] retorno = new Double[6];
+		retorno[0] = minSL;
+		retorno[1] = minES;
+		retorno[2] = sumSL/100;
+		retorno[3] = sumES/100;
+		retorno[4] = maxSL;
+		retorno[5] = maxES;
+		
+		return retorno;
+	}
+
+	public TablaHashSL getTablaSL() {
+		return tablaSL;
+	}
+	
+	public TablaHashES getTablaES() {
+		return tablaES;
+	}
+	
+	public void agregarES(String key, Comparendo value)
+	{
+		ListaEncadenada b = (ListaEncadenada) tablaES.dar(key);
+		
+		if(b==null)
+		{
+			b = new ListaEncadenada<Comparendo>();
+			b.agregarFinal(value);
+			tablaES.agregar(key, b);
+		}
+		else
+		{
+			b.agregarFinal(value);
+		}
+	}
+	
+	public void agregarSL(String key, Comparendo value)
+	{
+		ListaEncadenada b = (ListaEncadenada) tablaSL.dar(key);
+		
+		if(b==null)
+		{
+			b = new ListaEncadenada<Comparendo>();
+			b.agregarFinal(value);
+			tablaSL.agregar(key, b);
+		}
+		else
+		{
+			b.agregarFinal(value);
+		}
+	}
+
 }

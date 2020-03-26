@@ -8,18 +8,20 @@ public class Nodo<E extends Comparable<E>>
 	/**
 	 * Referencia al siguiente nodo
 	 */
-	private Nodo<E> siguiente;
+	private Nodo siguiente;
+	
 	
 	/**
 	 * Elelemtno generico contenido en el nodo
 	 */
 	private E elemento;
 	
+//	private K key;
 	/**
 	 * Constructor con un elemento pasado por parametro
 	 * @param pElelemtno elemento a añadir en el nodo
 	 */
-	public Nodo(E pElelemtno)
+	public Nodo( E pElelemtno)
 	{
 		siguiente = null;
 		elemento = pElelemtno;
@@ -33,12 +35,23 @@ public class Nodo<E extends Comparable<E>>
 	{
 		return elemento;
 	}
+	
+	
+	public void cambiarElemento(E elem)
+	{
+		elemento = elem;
+	}
+	
+//	public void cambiarKey(K pkey)
+//	{
+//		key = pkey;
+//	}
 
 	/**
 	 * Retorna el siguiente nodo
 	 * @return siguiente nodo
 	 */
-	public Nodo<E> darSiguiente()
+	public Nodo darSiguiente()
 	{
 		return siguiente;
 	}
@@ -47,7 +60,7 @@ public class Nodo<E extends Comparable<E>>
 	 * Cambia el siguiento nodo por uno recibido por parámetro
 	 * @param pSiguiente nuevo siguiente nodo
 	 */
-	public void cambiarSiguiente(Nodo<E> pSiguiente)
+	public void cambiarSiguiente(Nodo pSiguiente)
 	{
 		siguiente = pSiguiente;
 	}

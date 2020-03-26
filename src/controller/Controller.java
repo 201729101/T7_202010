@@ -1,8 +1,12 @@
 package controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
-import model.logic.Infraccion;
+import model.data_structures.Comparendo;
+import model.data_structures.*;
 import model.logic.Modelo;
 import view.View;
 
@@ -10,10 +14,10 @@ public class Controller {
 
 	/* Instancia del Modelo*/
 	private Modelo modelo;
-	
+
 	/* Instancia de la Vista*/
 	private View view;
-	
+
 	/**
 	 * Crear la vista y el modelo del proyecto
 	 * @param capacidad tamaNo inicial del arreglo
@@ -23,7 +27,7 @@ public class Controller {
 		view = new View();
 		modelo = new Modelo();
 	}
-		
+
 	/**
 	 * Corre el sistema mediante la consola 
 	 */
@@ -31,96 +35,82 @@ public class Controller {
 	{
 		Scanner lector = new Scanner(System.in);
 		boolean fin = false;
-		Infraccion resp = null;
+		Comparendo resp = null;
 
 		while( !fin ){
 			view.printMenu();
 
 			int option = lector.nextInt();
+			SimpleDateFormat parser = new SimpleDateFormat("yyyy/MM/dd");
 			switch(option){
-				case 1:
-//					view.printMessage("--------- \nCrear Arreglo \nDar dar ruta del archivo: ");
-//				    String ruta = lector.next();
-				    modelo = new Modelo(); 
-				    modelo.leerDatos("comparendos_dei_2018.geojson");
-				    view.printMessage("Comparendos cargados");
-				    view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;
+			case 1:
+				modelo = new Modelo(); 
+				Comparendo[] retorno = modelo.cargarDatos("./data/comparendos_dei_2018_small.geojson");
+				view.printMessage("Numero de comparendos: "+modelo.getTablaSL().getN());
+				view.printMessage("Primer Comaprendo: ");
+				view.printComparendo(retorno[0]);
+				view.printMessage("Último comparendo: ");
+				view.printComparendo(retorno[1]);
+				System.out.println("----------------------------");
+				view.printMessage("Valor N:   SL, "+modelo.getTablaSL().getN()+"    ES, "+modelo.getTablaES().getN());
+				view.printMessage("Valos inicial M:    SL, "+modelo.getTablaSL().getMi()+"     ES, "+modelo.getTablaES().getMi());
+				view.printMessage("Valor final M:     SL, "+modelo.getTablaSL().getM()+"    ES, "+modelo.getTablaES().getM());
+				view.printMessage("Factor de carga:    SL, "+(modelo.getTablaSL().getN()/modelo.getTablaSL().getM())+"    ES, "+(modelo.getTablaES().getN()/modelo.getTablaES().getM()));
+				view.printMessage("Rehashes:    SL, "+modelo.getTablaSL().getR()+"    ES, "+modelo.getTablaES().getR());
+				break;
 
-				case 2:
-					view.printMessage("--------- \nDar ID del comparendo: ");
-					int id = lector.nextInt();
-					view.printMessage("--------- \nDar fecha del comparendo: ");
-					String fecha = lector.next();
-					view.printMessage("--------- \nDar medio de detección del comparendo: ");
-					String medio = lector.next();
-					view.printMessage("--------- \nDar clase de vehículo comparentado: ");
-					String clase = lector.next();
-					view.printMessage("--------- \nDar tipo de servició del vehículo comparentado: ");
-					String tipo = lector.next();
-					view.printMessage("--------- \nDar código de infracción del comparendo: ");
-					String inf = lector.next();
-					view.printMessage("--------- \nDar descripción del comparendo: ");
-					String desc = lector.next();
-					view.printMessage("--------- \nDar localidad del comparendo: ");
-					String loc = lector.next();
-					view.printMessage("--------- \nDar latitud del comparendo: ");
-					double lat = lector.nextDouble();
-					view.printMessage("--------- \nDar longitud del comparendo: ");
-					double lon = lector.nextDouble();
-					resp = new Infraccion(id,fecha,medio,clase,tipo,inf,desc,loc,lat,lon);
-					modelo.agregarFinal(resp);
-					view.printMessage("Dato agregado");
-					view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;
+			case 2:
 
-				case 3:
-					view.printMessage("--------- \nDar ID del comparendo a buscar: ");
-					int pId = lector.nextInt();
-					resp = modelo.buscar(pId);
-					if ( resp != null)
-					{
-						view.printMessage("Dato encontrado: \nID: "+resp.getId()+"\nFecha: "+resp.getFecha()+"\nMedio de Detección: "+resp.getMedio()+"\nClase de vehículo: "+resp.getClase()+"\nTipo de servicio: "+resp.getTipo()+"\nInfracción: "+resp.getInfr()+"\nDescripción: "+resp.getDesc()+"\nLocalidad: "+resp.getLocalidad()+"\nCoordenadas: "+resp.getLatitud()+" , "+resp.getLongitud());
-					}
-					else
-					{
-						view.printMessage("Dato NO encontrado");
-					}
-					view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;
+				view.printMessage("Ingrese fecha en formato <Años/mes/dia>, clase de vehículo y código de infracción pegados:");
+				String l = lector.next();	
+				try
+				{
+//					String[] datos = l.split("-");
+//					ArrayList lista = modelo.rUno(datos[0]+datos[1]+datos[2]);
+					ArrayList lista = modelo.rUno(l);
+					view.printLista(lista);
+				}
+				catch(Exception e)
+				{
+					System.out.println("Hubo un error");
+					e.printStackTrace();
+				}
+				break;
 
-				case 4:
-					view.printMessage("--------- \nDar id del comparendo a eliminar: ");
-					int pIdE = lector.nextInt();
-					resp = modelo.eliminar(pIdE);
-					if ( resp != null)
-					{
-						view.printMessage("Dato eliminado: \nID: "+resp.getId()+"\nFecha: "+resp.getFecha()+"\nMedio de Detección: "+resp.getMedio()+"\nClase de vehículo: "+resp.getClase()+"\nTipo de servicio: "+resp.getTipo()+"\nInfracción: "+resp.getInfr()+"\nDescripción: "+resp.getDesc()+"\nLocalidad: "+resp.getLocalidad()+"\nCoordenadas: "+resp.getLatitud()+" , "+resp.getLongitud());
-					}
-					else
-					{
-						view.printMessage("Dato NO eliminado");							
-					}
-					view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;
+			case 3:
+				view.printMessage("Ingrese fecha en formato <Años/mes/dia>, clase de vehículo y código de infracción pegados:");
+				String l2 = lector.next();	
+				try
+				{
+//					String[] datos2 = l2.split("-");
+					ArrayList lista2 = modelo.rDos(l2);
+					view.printLista(lista2);
+				}
+				catch(Exception e)
+				{
+					System.out.println("Hubo un error");
+					e.printStackTrace();
+				}
+				break;
 
-				case 5: 
-					view.printMessage("--------- \nContenido del Arreglo: ");
-					view.printModelo(modelo);
-					view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;	
-					
-				case 6: 
-					view.printMessage("--------- \n Hasta pronto !! \n---------"); 
-					lector.close();
-					fin = true;
-					break;	
+			case 4:
+				Double[] r = modelo.rTres();
+				view.printMessage("Tiempo mínimo:     SL, "+r[0]+"     ES, "+r[1]);
+				view.printMessage("Tiempo promedio:   SL, "+r[2]+"    ES, "+r[3]);
+				view.printMessage("Tiempo máximo:     SL, "+r[4]+"     ES, "+r[5]);
+				break;
 
-				default: 
-					view.printMessage("--------- \n Opcion Invalida !! \n---------");
-					break;
+			case 5: 
+				view.printMessage("--------- \n Hasta pronto !! \n---------"); 
+				lector.close();
+				fin = true;
+				break;	
+
+			default: 
+				view.printMessage("--------- \n Opcion Invalida !! \n---------");
+				break;
 			}
 		}
-		
+
 	}	
 }

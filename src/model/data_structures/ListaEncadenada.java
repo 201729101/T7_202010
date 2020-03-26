@@ -5,17 +5,17 @@ import model.data_structures.Nodo;
 /**
  * Clase de la estructura de datos lista encadenada
  */
-public class ListaEncadenada<E extends Comparable<E>> 
+public class ListaEncadenada< E extends Comparable<E>> 
 {
 	/**
 	 * Referencia al primer elemento de la lista
 	 */
-	private Nodo<E> primero;
+	private Nodo primero;
 	
 	/**
 	 * Referencia al último elemento de la lista
 	 */
-	private Nodo<E> ultimo;
+	private Nodo ultimo;
 	
 	/**
 	 * Numero de elemeentos en la lista
@@ -45,7 +45,7 @@ public class ListaEncadenada<E extends Comparable<E>>
 	 * Devuelve el primer nodo de la lista
 	 * @return primer nodo de la lista
 	 */
-	public Nodo<E> darPrimero()
+	public Nodo darPrimero()
 	{
 		return primero;
 	}
@@ -54,7 +54,7 @@ public class ListaEncadenada<E extends Comparable<E>>
 	 * Devuelve el último nodo de la lista
 	 * @return último nodo de la lista
 	 */
-	public Nodo<E> darUltimo()
+	public Nodo darUltimo()
 	{
 		return ultimo;
 	}
@@ -72,11 +72,11 @@ public class ListaEncadenada<E extends Comparable<E>>
 		}
 		else
 		{
-			for(Nodo<E> n = primero ; n!=null ; n = n.darSiguiente())
+			for(Nodo n = primero ; n!=null ; n = n.darSiguiente())
 			{
 				if(n.darElemento().compareTo(elemento)==0)
 				{
-					return n.darElemento();
+					return (E) n.darElemento();
 				}
 			}
 			return null;
@@ -91,16 +91,16 @@ public class ListaEncadenada<E extends Comparable<E>>
 	public E buscar(int i)
 	{
 		E elemento = null;
-		Nodo<E> item = primero;
+		Nodo item = primero;
 		int cont = 0;
 		while(item!=null)
 		{
 			if(cont==i)
 			{
-				elemento = item.darElemento();
+				elemento = (E) item.darElemento();
 				break;
 			}
-			item = (Nodo<E>) item.darSiguiente();
+			item = (Nodo) item.darSiguiente();
 			cont ++;
 		}
 		
@@ -111,9 +111,9 @@ public class ListaEncadenada<E extends Comparable<E>>
 	 * Agrega un elemento recibido por parámatro al final de la lista
 	 * @param elemento elelemnto a agregar en la lista, elemento != null
 	 */
-	public void agregarFinal(E elemento)
+	public void agregarFinal( E elemento)
 	{
-		Nodo<E> nodo = new Nodo<E>( elemento );
+		Nodo nodo = new Nodo( elemento );
 		if(primero == null)
 		{
 			primero = nodo;
@@ -131,9 +131,9 @@ public class ListaEncadenada<E extends Comparable<E>>
 	 * Agrega un elemento recibido por parámatero al inicio de la lista
 	 * @param elemento elelemtno a agregar en la lista, elelemtno != null
 	 */
-	public void agregarInicio(E elemento)
+	public void agregarInicio( E elemento)
 	{
-		Nodo<E> nodo = new Nodo<E>(elemento);
+		Nodo nodo = new Nodo( elemento);
 		
 		if(primero==null)
 		{
@@ -157,24 +157,24 @@ public class ListaEncadenada<E extends Comparable<E>>
 	{
 		if(primero!=null && primero.darElemento().compareTo(elemento)!=0)
 		{
-			Nodo<E> anterior = primero;
-			for(Nodo<E> n = primero.darSiguiente() ; n!=null ; n = n.darSiguiente())
+			Nodo anterior = primero;
+			for(Nodo n = primero.darSiguiente() ; n!=null ; n = n.darSiguiente())
 			{
 				if(n.darElemento().compareTo(elemento)==0)
 				{
 					anterior.cambiarSiguiente(n.darSiguiente());
 					n.cambiarSiguiente(null);
-					return n.darElemento();
+					return (E) n.darElemento();
 				}
 				anterior = n;
 			}
 		}
 		else if(primero.darElemento().compareTo(elemento)==0)
 		{
-			Nodo<E> nuevo = primero;
+			Nodo nuevo = primero;
 			primero = primero.darSiguiente();
 			nuevo.cambiarSiguiente(null);
-			return nuevo.darElemento();
+			return (E) nuevo.darElemento();
 		}
 		return null;
 	}
@@ -187,8 +187,8 @@ public class ListaEncadenada<E extends Comparable<E>>
 	public E eliminar(int i)
 	{
 		E elemento = null;
-		Nodo<E> anterior = primero;
-		Nodo<E> item = primero.darSiguiente();
+		Nodo anterior = primero;
+		Nodo item = primero.darSiguiente();
 		int cont = 1;
 		if(i!=0)
 		{
@@ -197,7 +197,7 @@ public class ListaEncadenada<E extends Comparable<E>>
 				if(cont==i)
 				{
 					anterior.cambiarSiguiente(item.darSiguiente());
-					elemento = item.darElemento();
+					elemento = (E) item.darElemento();
 					item.cambiarSiguiente(null);
 					break;
 				}
@@ -208,10 +208,10 @@ public class ListaEncadenada<E extends Comparable<E>>
 		}
 		else
 		{
-			Nodo<E> temp = primero;
+			Nodo temp = primero;
 			primero = primero.darSiguiente();
 			temp.cambiarSiguiente(null);
-			elemento = temp.darElemento();
+			elemento = (E) temp.darElemento();
 		}
 		
 		return elemento;
