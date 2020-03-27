@@ -45,18 +45,19 @@ public class Controller {
 			switch(option){
 			case 1:
 				modelo = new Modelo(); 
+//				Comparendo[] retorno = modelo.cargarDatos("./data/Comparendos_DEI_2018_Bogotá_D.C.geojson");
 				Comparendo[] retorno = modelo.cargarDatos("./data/comparendos_dei_2018_small2.geojson");
 				view.printMessage("Numero de comparendos: "+modelo.getTablaSL().getN());
-				view.printMessage("Primer Comaprendo: ");
+				view.printMessage("Primer comparendo: ");
 				view.printComparendo(retorno[0]);
 				view.printMessage("Último comparendo: ");
 				view.printComparendo(retorno[1]);
 				System.out.println("----------------------------");
-				view.printMessage("Valor N:   SL, "+modelo.getTablaSL().getN()+"    ES, "+modelo.getTablaES().getN());
-				view.printMessage("Valos inicial M:    SL, "+modelo.getTablaSL().getMi()+"     ES, "+modelo.getTablaES().getMi());
-				view.printMessage("Valor final M:     SL, "+modelo.getTablaSL().getM()+"    ES, "+modelo.getTablaES().getM());
-				view.printMessage("Factor de carga:    SL, "+(modelo.getTablaSL().getN()/modelo.getTablaSL().getM())+"    ES, "+(modelo.getTablaES().getN()/modelo.getTablaES().getM()));
-				view.printMessage("Rehashes:    SL, "+modelo.getTablaSL().getR()+"    ES, "+modelo.getTablaES().getR());
+				view.printMessage("Valor N:            SL, "+modelo.getTablaSL().getN()+"    ES, "+modelo.getTablaES().getN());
+				view.printMessage("Valos inicial M:    SL, "+modelo.getTablaSL().getMi()+"    ES, "+modelo.getTablaES().getMi());
+				view.printMessage("Valor final M:      SL, "+modelo.getTablaSL().getM()+"    ES, "+modelo.getTablaES().getM());
+				view.printMessage("Factor de carga:    SL, "+(modelo.getTablaSL().getN()/modelo.getTablaSL().getM())+"     ES, "+(modelo.getTablaES().getN()/modelo.getTablaES().getM()));
+				view.printMessage("Rehashes:           SL, "+modelo.getTablaSL().getR()+"     ES, "+modelo.getTablaES().getR());
 				break;
 
 			case 2:
