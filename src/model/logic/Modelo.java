@@ -76,7 +76,10 @@ public class Modelo
 				int OBJECTID = e.getAsJsonObject().get("properties").getAsJsonObject().get("OBJECTID").getAsInt();
 
 				String s = e.getAsJsonObject().get("properties").getAsJsonObject().get("FECHA_HORA").getAsString();	
-				Date FECHA_HORA = parser.parse(s); 
+				String[] s1 = s.split("T");
+				String[] s2 = s1[0].split("-");
+				String s3 = s2[0]+"/"+s2[1]+"/"+s2[2];
+				Date FECHA_HORA = parser.parse(s3); 
 
 				String MEDIO_DETE = e.getAsJsonObject().get("properties").getAsJsonObject().get("MEDIO_DETE").getAsString();
 				String CLASE_VEHI = e.getAsJsonObject().get("properties").getAsJsonObject().get("CLASE_VEHI").getAsString();
@@ -92,7 +95,7 @@ public class Modelo
 						.get(1).getAsDouble();
 
 				Comparendo c = new Comparendo(OBJECTID, FECHA_HORA, MEDIO_DETE, CLASE_VEHI, TIPO_SERVI, INFRACCION, DES_INFRAC, LOCALIDAD, longitud, latitud);
-				String key = s+CLASE_VEHI+INFRACCION;
+				String key = s3+CLASE_VEHI+INFRACCION;
 				agregarES(key, c);
 				agregarSL(key, c);
 				if(primero == null)
