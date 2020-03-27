@@ -45,8 +45,8 @@ public class Controller {
 			switch(option){
 			case 1:
 				modelo = new Modelo(); 
-//				Comparendo[] retorno = modelo.cargarDatos("./data/Comparendos_DEI_2018_Bogotá_D.C.geojson");
-				Comparendo[] retorno = modelo.cargarDatos("./data/comparendos_dei_2018_small2.geojson");
+				Comparendo[] retorno = modelo.cargarDatos("./data/Comparendos_DEI_2018_Bogotá_D.C.geojson");
+//				Comparendo[] retorno = modelo.cargarDatos("./data/comparendos_dei_2018_small2.geojson");
 				view.printMessage("Numero de comparendos: "+modelo.getTablaSL().getN());
 				view.printMessage("Primer comparendo: ");
 				view.printComparendo(retorno[0]);
