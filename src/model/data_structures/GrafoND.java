@@ -227,7 +227,6 @@ public class GrafoND<E extends Comparable<E>>
 	public void addVertex(int idVertex, E Vertex)
 	{
 		((Objeto) adj[idVertex]).setElemento(Vertex);
-		V++;
 	}
 	
 	/**

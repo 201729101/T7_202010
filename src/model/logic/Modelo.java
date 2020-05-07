@@ -227,7 +227,7 @@ public class Modelo
 					JSONObject arco = new JSONObject();
 					Arc arc = (Arc) e;
 					arco.put("OBJECT_ID", arc.getId());
-					arco.put("DISTACIA", arc.getDistance());
+					arco.put("DISTANCIA", arc.getDistance());
 					arcos.add(arco);
 				}
 				vertice.put("arcos", arcos);
@@ -240,6 +240,48 @@ public class Modelo
 		catch(Exception e)
 		{
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Lee el archivo JSON creado previamente
+	 * @param path Ruta del archivp
+	 * @return String con numero de vertices y arcos.
+	 */
+	public String leerArchivo(String path)
+	{
+		JsonReader reader;
+		GrafoND graf = new GrafoND(228046);
+		try 
+		{
+			reader = new JsonReader(new FileReader(path));
+			JsonArray elem = JsonParser.parseReader(reader).getAsJsonArray();
+			for(JsonElement e: elem)
+			{
+				int id = e.getAsJsonObject().get("OBJECT_ID").getAsInt();
+				double lon = e.getAsJsonObject().get("LONGITUD").getAsDouble();
+				double lat = e.getAsJsonObject().get("LATITUD").getAsDouble();
+				Vertice vert = new Vertice(id,lon,lat);
+				graf.addVertex(id, vert);
+				JsonArray arcos = e.getAsJsonObject().get("arcos").getAsJsonArray();
+				for(JsonElement o:arcos)
+				{
+					int ID = o.getAsJsonObject().get("OBJECT_ID").getAsInt();
+					double dis = o.getAsJsonObject().get("DISTANCIA").getAsDouble();
+					Arc ar = new Arc(ID,dis);
+					graf.addEdge(id, ID, dis);
+				}
+			}
+			String retorno;
+			int vert = graf.V(); int ed = graf.E();
+			retorno = ""+vert+","+ed;
+			return retorno;
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
 		}
 	}
 

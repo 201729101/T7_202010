@@ -53,13 +53,17 @@ public class Controller {
 				modelo.escribirJson("./data/Grafo.json");
 				break;
 
-			case 3:
+			case 4:
 				modelo.cargarEstaciones("./data/estacionpolicia.geojson.json");
 				System.out.println("Numero de estaciones: "+modelo.estaciones.darTamano());
 				view.printLista(modelo.estaciones);
 				break;
 
-			case 4:
+			case 3:
+				String l = modelo.leerArchivo("./data/Grafo.json");
+				String[] ls = l.split(",");
+				System.out.println("Numero de vertices cargados: "+ls[0]);
+				System.out.println("Numero de arcos cargados: "+ls[1]);
 				break;
 
 			case 5: 
