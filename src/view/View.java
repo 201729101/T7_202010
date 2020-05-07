@@ -3,6 +3,8 @@ package view;
 import java.util.ArrayList;
 
 import java.util.Date;
+
+import model.data_structures.Estacion;
 import model.data_structures.ListaEncadenada;
 import model.data_structures.Nodo;
 import model.logic.Modelo;
@@ -22,9 +24,9 @@ public class View
 	     */
 		public void printMenu()
 		{
-			System.out.println("1. Cargar Comaprendos");
-			System.out.println("2. Dar comparendos por fecha, clase e infracción (SL)");
-			System.out.println("3. Dar comparendos por fecha, clase e infracción (ES)");
+			System.out.println("1. Cargar vertices y arcos");
+			System.out.println("2. Escribir archivo JSON");
+			System.out.println("3. Cargar estaciones");
 			System.out.println("4. Pruebas");
 			System.out.println("5. Exit");
 			System.out.println("Dar el numero de opcion a resolver, luego oprimir tecla Return: (e.g., 1):");
@@ -39,34 +41,34 @@ public class View
 			System.out.println(mensaje);
 		}		
 		
-//		public void printComparendo(Comparendo inf)
-//		{
-//			System.out.println("[");
-//			System.out.println("ID: "+inf.getId());
-//			System.out.println("Fecha: "+inf.getFecha());
-//			System.out.println("Medio de detección: " + inf.getMedio());
-//			System.out.println("Clase de vehículo: "+inf.getClase());
-//			System.out.println("Tipo de servicio: "+inf.getTipo());
-//			System.out.println("Infracción: "+inf.getInfr());
-//			System.out.println("Descripción: "+inf.getDesc());
-//			System.out.println("Localidad: "+inf.getLocalidad());
-//			System.out.println("Coordenadas: "+inf.getLatitud()+" , "+inf.getLongitud());
-//			System.out.println("]");
-//		}
+		public void printEstación(Estacion inf)
+		{
+			System.out.println("[");
+			System.out.println("ID: "+inf.getOBJECTID());
+			System.out.println("Descripción: "+inf.getEPODESCRIP());
+			System.out.println("Dirección: " + inf.getEPODIR_SITIO());
+			System.out.println("Horario: "+inf.getEPOHORARIO());
+			System.out.println("Telefono: "+inf.getEPOTELEFON());
+			System.out.println("Correo electrónico: "+inf.getEPOCELECTR());
+			System.out.println("Nombre: "+inf.getEPONOMBRE());
+			System.out.println("Función: "+inf.getEPOFUNCION());
+			System.out.println("Coordenadas: "+inf.getEPOLATITUD()+" , "+inf.getEPOLONGITU());
+			System.out.println("]");
+		}
 		
 		/**
-		 * Imprime todo un modelo recibido por parámetro
-		 * @param modelo Modelo a imprimir
+		 * Imprime toda una Lista recibida por parámetro
+		 * @param lista Lista a imprimir
 		 */
-//		public void printLista(ArrayList lista)
-//		{
-//			System.out.println("Comparendos buscados: {");
-//			for(int i=0 ; i<lista.size() ; i++)
-//			{
-//				Comparendo inf = (Comparendo) lista.get(i);
-//				printComparendo(inf);
-//			}
-//			System.out.println("}");
-//		}
+		public void printLista(ListaEncadenada lista)
+		{
+			System.out.println("Estaciones: {");
+			for(Object e:lista)
+			{
+				Estacion inf = (Estacion) e;
+				printEstación(inf);
+			}
+			System.out.println("}");
+		}
 		
 }

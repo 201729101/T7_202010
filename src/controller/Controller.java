@@ -50,10 +50,13 @@ public class Controller {
 
 			case 2:
 
+				modelo.escribirJson("./data/Grafo.json");
 				break;
 
 			case 3:
-
+				modelo.cargarEstaciones("./data/estacionpolicia.geojson.json");
+				System.out.println("Numero de estaciones: "+modelo.estaciones.darTamano());
+				view.printLista(modelo.estaciones);
 				break;
 
 			case 4:

@@ -2,8 +2,14 @@ package model.data_structures;
 
 public class Arc implements Comparable<Arc>
 {
+	/**
+	 * Id del arco
+	 */
 	private int id;
 
+	/**
+	 * Distancia dl arco
+	 */
 	private double distance;
 
 	public Arc(int pId, double pDis)

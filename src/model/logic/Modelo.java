@@ -1,26 +1,38 @@
 package model.logic;
 
 import java.io.BufferedReader;
+
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import model.data_structures.ListaEncadenada;
 import model.data_structures.Arc;
 import model.data_structures.Estacion;
 import model.data_structures.GrafoND;
 import model.data_structures.Vertice;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 /**
  * Definicion del modelo del mundo
  *
  */
 public class Modelo
 {	
+	/**
+	 * Grafo con informacion vial
+	 */
 	public GrafoND grafo;
 
+	/**
+	 * Lista de esatciones
+	 */
 	public ListaEncadenada estaciones;
 
 	/**
@@ -33,7 +45,7 @@ public class Modelo
 	}
 
 	/**
-	 * Inicia la lectura del archivo JSON y rellena la lista
+	 * Inicia la lectura del archivo JSON y rellena la lista de estaciones
 	 * @param path, ruta del archivo a leer
 	 */
 	public void cargarEstaciones(String PATH) 
@@ -87,6 +99,10 @@ public class Modelo
 		}	
 	}
 
+	/**
+	 * Lee el archivo de vertices y llena le grafo
+	 * @param PATH Ruta del archivo
+	 */
 	public void cargarVertices(String PATH) 
 	{
 		try 
@@ -114,6 +130,10 @@ public class Modelo
 		}	
 	}
 
+	/**
+	 * Lee el archivo de arcos y rellena el grafo
+	 * @param PATH Archivo a leer
+	 */
 	public void cargarArcos(String PATH)
 	{
 		try
@@ -121,6 +141,9 @@ public class Modelo
 			Haversine dis = new Haversine();
 			BufferedReader lectura = new BufferedReader( new FileReader(new File(PATH)));
 			String linea = lectura.readLine();
+			linea = lectura.readLine();
+			linea = lectura.readLine();
+			linea =lectura.readLine();
 			while(!linea.equals("")||!linea.equals(null))
 			{
 				String[] datos = linea.split(" ");
@@ -151,6 +174,9 @@ public class Modelo
 		}
 	}
 
+	/**
+	 * Clase para la distancia Haversiana entre coordenadas
+	 */
 	public class Haversine 
 	{
 		private static final int EARTH_RADIUS = 6371; // Approx Earth radius in KM
@@ -172,6 +198,48 @@ public class Modelo
 
 		public double haversin(double val) {
 			return Math.pow(Math.sin(val / 2), 2);
+		}
+	}
+	
+	/**
+	 * Escribe un archivo JSON con los datos del grafo
+	 * @param path Ruta delarchivo a escribir
+	 */
+	public void escribirJson(String path)
+	{	
+		try
+		{
+			FileWriter file = new FileWriter(path);
+//			writer = new JsonWriter(new FileWriter(path));
+			JSONArray graf = new JSONArray();
+			int max = grafo.V();
+			for(int i = 0; i<grafo.V() ; i++)
+			{
+				JSONObject vertice =  new JSONObject();
+				Vertice vert = (Vertice) grafo.getInfoVertex(i);
+				vertice.put("OBJECT_ID", vert.getId());
+				vertice.put("LONGITUD", vert.getLongitud());
+				vertice.put("LATITUD", vert.getLatitud());
+				JSONArray arcos = new JSONArray();
+				ListaEncadenada<Arc> edges = grafo.getEdges(i);
+				for(Object e: edges)
+				{
+					JSONObject arco = new JSONObject();
+					Arc arc = (Arc) e;
+					arco.put("OBJECT_ID", arc.getId());
+					arco.put("DISTACIA", arc.getDistance());
+					arcos.add(arco);
+				}
+				vertice.put("arcos", arcos);
+				graf.add(vertice);
+			}
+			
+			file.write(graf.toJSONString());
+			file.flush();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 
