@@ -1,10 +1,8 @@
 package view;
 
 import java.util.ArrayList;
+
 import java.util.Date;
-
-import model.data_structures.Comparendo;
-
 import model.data_structures.ListaEncadenada;
 import model.data_structures.Nodo;
 import model.logic.Modelo;
@@ -41,34 +39,34 @@ public class View
 			System.out.println(mensaje);
 		}		
 		
-		public void printComparendo(Comparendo inf)
-		{
-			System.out.println("[");
-			System.out.println("ID: "+inf.getId());
-			System.out.println("Fecha: "+inf.getFecha());
-			System.out.println("Medio de detección: " + inf.getMedio());
-			System.out.println("Clase de vehículo: "+inf.getClase());
-			System.out.println("Tipo de servicio: "+inf.getTipo());
-			System.out.println("Infracción: "+inf.getInfr());
-			System.out.println("Descripción: "+inf.getDesc());
-			System.out.println("Localidad: "+inf.getLocalidad());
-			System.out.println("Coordenadas: "+inf.getLatitud()+" , "+inf.getLongitud());
-			System.out.println("]");
-		}
+//		public void printComparendo(Comparendo inf)
+//		{
+//			System.out.println("[");
+//			System.out.println("ID: "+inf.getId());
+//			System.out.println("Fecha: "+inf.getFecha());
+//			System.out.println("Medio de detección: " + inf.getMedio());
+//			System.out.println("Clase de vehículo: "+inf.getClase());
+//			System.out.println("Tipo de servicio: "+inf.getTipo());
+//			System.out.println("Infracción: "+inf.getInfr());
+//			System.out.println("Descripción: "+inf.getDesc());
+//			System.out.println("Localidad: "+inf.getLocalidad());
+//			System.out.println("Coordenadas: "+inf.getLatitud()+" , "+inf.getLongitud());
+//			System.out.println("]");
+//		}
 		
 		/**
 		 * Imprime todo un modelo recibido por parámetro
 		 * @param modelo Modelo a imprimir
 		 */
-		public void printLista(ArrayList lista)
-		{
-			System.out.println("Comparendos buscados: {");
-			for(int i=0 ; i<lista.size() ; i++)
-			{
-				Comparendo inf = (Comparendo) lista.get(i);
-				printComparendo(inf);
-			}
-			System.out.println("}");
-		}
+//		public void printLista(ArrayList lista)
+//		{
+//			System.out.println("Comparendos buscados: {");
+//			for(int i=0 ; i<lista.size() ; i++)
+//			{
+//				Comparendo inf = (Comparendo) lista.get(i);
+//				printComparendo(inf);
+//			}
+//			System.out.println("}");
+//		}
 		
 }
