@@ -137,7 +137,7 @@ public class GrafoND<E extends Comparable<E>>
 		Arc two = new Arc(v,costArc);
 		((Objeto) adj[v]).getEdges().agregarFinal(one);      
 		((Objeto) adj[w]).getEdges().agregarFinal(two);
-		E++;    
+		E++;
 	}   
 
 	/**

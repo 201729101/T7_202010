@@ -28,7 +28,8 @@ public class View
 			System.out.println("2. Escribir archivo JSON");
 			System.out.println("3. Leer JSON creado");
 			System.out.println("4. Cargar Estaciones");
-			System.out.println("5. Exit");
+			System.out.println("5. Visualizar Mapa");
+			System.out.println("6. Exit");
 			System.out.println("Dar el numero de opcion a resolver, luego oprimir tecla Return: (e.g., 1):");
 		}
 
